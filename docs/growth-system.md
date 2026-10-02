@@ -15,8 +15,8 @@
 
 | 来源 | XP | 触发 |
 |---|---|---|
-| 完成任务 | +10 | `ctx.tasks.onTaskDone`（completed；页面关闭期也不漏记） |
-| 新会话（startup） | +5 | `agent/session-start`，source='startup' |
+| 完成任务 | +10 | `ctx.jobs` `settled`（completed；页面关闭期也不漏记） |
+| 新会话（startup） | +5 | `agent/created`，source='startup' |
 | 续接/延续（resume/compact/clear） | +2 | 同上，其余 source |
 | 活跃陪伴时长 | 累积 | 任务运行中按轮询差分累加；单次增量封顶 5min（防睡眠一夜刷满） |
 

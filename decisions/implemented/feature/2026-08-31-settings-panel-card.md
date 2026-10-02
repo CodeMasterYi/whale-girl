@@ -31,9 +31,10 @@ L1 体验层「用户可感知并有意愿调整的参数」缺最后一块 UI�
   整组写基于已提交组对象合并叶（幂等，不丢组内其他叶）。默认值不写第二份——表单兜底
   由 index.mjs 传入 CFG_DEFAULTS（verify-config-sync 门禁保证与 src/config.mjs DEFAULTS
   一致）。
-- **client inject 声明 `['slots', 'locale', 'settingsScope']`**（cordis 严格注入：未声明
-  即抛 `cannot get property without inject`）；apply 内 try/catch 守卫注册——服务缺失或
-  注册失败仅「无卡片」，宠物本体照常跑。react 由平台种子表提供（`getStaticModules` 种子
+- **client inject 声明 `['slots', 'locale']`**（cordis 严格注入：未声明即抛 `cannot get property
+  without inject`，且注入是激活门槛——声明宿主没有的服务等于 client half 不挂载）；
+  `settingsScope` 改在 apply 内按服务在场守卫，配合 try/catch——服务缺失或注册失败仅
+  「无卡片」，宠物本体照常跑。react 由平台种子表提供（`getStaticModules` 种子
   `react`），esbuild `--external:react`（bundle 内 `require("react")`），不自带运行时。
 - **locale 独立命名空间 `settings.whale-girl`**（zh/en 两套），与 README 行为描述一致。
 - **无 Node half 改动**：命名空间注册/校验/热更新沿用 config-system；写面仍走宿主
@@ -46,6 +47,9 @@ L1 体验层「用户可感知并有意愿调整的参数」缺最后一块 UI�
 **无重叠**——本记录只覆盖 client 侧卡片表面（槽注册 + 暂存表单 + locale + build
 external）；settings 命名空间注册/校验/热更新/写面信任边界归
 [config-system](./2026-08-09-config-system.md)，不受本记录影响。
+
+部分取代 [../bug-fix/2026-10-03-dsh-020-host-api-migration.md](../bug-fix/2026-10-03-dsh-020-host-api-migration.md)——宿主撤掉 `settings.plugin.item` 槽与 `settingsScope` 传输后，卡片在本宿主上不注册、
+配置写面缺席；卡片源码与表单单测保留，接入宿主新设置面的形态由该记录给出。
 
 ## Alternatives considered
 
@@ -79,3 +83,6 @@ settingsScope 的 revision 门控与快照语义——重复造第二读通道�
 - 已知边界：卡片不含窗口时长/轮询等低频项（settings.yaml 仍可配全量）；语义层
   （XP/称号/曲线）封闭不变（verify-settings-schema 门禁无关此项）；卡片只在官方设置
   面板存在时出现（slot 声明方卸载 → 注册自动移除）。
+- 宿主现状：0.2.0-rc.2 撤掉 `settings.plugin.item` 槽、`settingsScope` 传输与
+  `settings.register` 面（settings.yaml 路径随之移除），卡片在本宿主上不注册、配置回退
+  DEFAULTS；迁移形态见 ../bug-fix/2026-10-03-dsh-020-host-api-migration.md。

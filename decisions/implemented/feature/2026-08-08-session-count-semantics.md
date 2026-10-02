@@ -8,7 +8,7 @@ Status: implemented
 
 ## Decision
 
-- **XP 区分（产品定夺，2026-08-08）**：`agent/session-start` 的 `payload.source` 判别——`startup`（新会话）+5 XP + 会话计数 + welcome 欢迎；`resume`/`compact`/`clear`（续接/延续）+2 XP（`RESUME_XP`），**不**计会话数、**不**触发 welcome（避免切换即欢迎的噪音）。回忆分别记「新会话开启（第 N 个）」与「回到旧会话，继续陪伴」。
+- **XP 区分（产品定夺，2026-08-08）**：`agent/created`（0.2.0 宿主事件名，见 [../bug-fix/2026-10-03-dsh-020-host-api-migration.md](../bug-fix/2026-10-03-dsh-020-host-api-migration.md)）的 `payload.source` 判别——`startup`（新会话）+5 XP + 会话计数 + welcome 欢迎；`resume`/`compact`/`clear`（续接/延续）+2 XP（`RESUME_XP`），**不**计会话数、**不**触发 welcome（避免切换即欢迎的噪音）。回忆分别记「新会话开启（第 N 个）」与「回到旧会话，继续陪伴」。
 - 「广结善缘」（sessions≥10）= 真实新会话数（仅 startup 计数）。
 
 ## Alternatives considered
@@ -23,3 +23,4 @@ Status: implemented
 
 - 新会话与续接 XP 区分（+5/+2，`RESUME_XP`）；「广结善缘」= 真实新会话数（仅 startup 计数）；续接不再触发 welcome（切换噪音消除）；回忆区分「新会话开启」与「回到旧会话，继续陪伴」。
 - 已知边界：`payload.source` 判别依赖宿主事件契约（'startup'/'resume'/'compact'/'clear'）；若宿主新增 source 值，未匹配者落入续接分支（+2 不计数），语义保守。
+- 宿主事件名以 [../bug-fix/2026-10-03-dsh-020-host-api-migration.md](../bug-fix/2026-10-03-dsh-020-host-api-migration.md) 为准：0.2.0 起为 `agent/created`，`payload.source` 词表与判据不变。

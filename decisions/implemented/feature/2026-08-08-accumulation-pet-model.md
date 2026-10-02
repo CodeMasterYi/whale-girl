@@ -16,7 +16,7 @@ Status: implemented
 - **动画状态 15 个**：idle/working/celebrate/error/disappointed/joy/eat/play/drag/walk/sleep/wake/welcome/think/wait（删 hungry/sad，happy→joy，新增 welcome/walk/think/wait；think/wait 当前 emoji 兜底无 sheet）。
 - **互动重定义**：投喂/玩耍是**纯乐趣**——状态不变，只回话（宠物"说话"气泡），无数值影响。
 - **持久化**：账本存 `<dshHome>/data/dsh-pet/state.json`，事件记账时 1s 防抖落盘，disable 时末次落盘。
-- **事件面**：账本记账经 `ctx.tasks.onTaskDone` 事件驱动（页面关闭期任务终态不漏记，killed 中性；完成同时开 celebrate 窗口——账本与庆祝同源）；`agent/request-error` → error/disappointed 情绪窗口（不计数）；`agent/session-start` → 新会话计数 + welcome / 续接 +2；工作态按轮询间隔累加活跃时长（单次增量封顶 5min）；client 订阅 host `sessions` 服务 → think/wait 陪伴状态与回合完成轻提示。
+- **事件面**（宿主契约迁移见 [../bug-fix/2026-10-03-dsh-020-host-api-migration.md](../bug-fix/2026-10-03-dsh-020-host-api-migration.md)）：账本记账经 `ctx.jobs` 的 `settled` 终态事件驱动（页面关闭期任务终态不漏记，killed 中性；完成同时开 celebrate 窗口——账本与庆祝同源）；`agent/request-error` → error/disappointed 情绪窗口（不计数）；`agent/created` → 新会话计数 + welcome / 续接 +2；工作态按轮询间隔累加活跃时长（单次增量封顶 5min）；client 订阅 host `sessions` 服务 → think/wait 陪伴状态与回合完成轻提示。
 
 ## Alternatives considered
 

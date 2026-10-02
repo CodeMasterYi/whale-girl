@@ -25,7 +25,7 @@
 
 | 状态 | 触发事件 | 窗口 | 说明 |
 |---|---|---|---|
-| `welcome` | `agent/session-start`（startup） | 6s（可配） | 新会话欢迎 |
+| `welcome` | `agent/created`（startup） | 6s（可配） | 新会话欢迎 |
 | `celebrate` | 任务完成/升级/称号 + **回合完成**（session running→false 边沿，含当前会话） | 6s（任务，可配）/ 4s（回合，client 本地） | 任务层双源同窗（事件+轮询）；回合层 client 本地窗口 |
 | `error` | 任务失败/`agent/request-error` | 4s（可配） | 惊吓，负面窗口 |
 | `disappointed` | 失败后尾段 | 6s（可配） | 失落，紧跟 error |
@@ -93,8 +93,8 @@
 
 | 宿主事件 | Node half 处理 | client 输入 |
 |---|---|---|
-| `tasks.onTaskDone` | 记账 + celebrate/failure 窗口 | `activity` |
-| `agent/session-start` | 会话 XP + welcome 窗口 | `activity` |
+| `ctx.jobs` `settled`（终态） | 记账 + celebrate/failure 窗口 | `activity` |
+| `agent/created` | 会话 XP + welcome 窗口 | `activity` |
 | `agent/request-error` | error/disappointed 窗口 | `activity` |
 | sessions.list 快照 | — | `sessionThink` / `sessionWait` / 非消费式回合完成截止时间→`celebrateUntil` |
 | 节奏器（client 本地） | — | `workingActive`（随机插曲）/ `celebrateUntil`（回合完成窗口） |
