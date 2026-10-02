@@ -30,7 +30,7 @@
 
 ### 账本结构
 
-`state.json`：`{ level, xp, stats{tasksDone, failures, sessions, activeMs, firstSeenAt}, titles[], memory[], updatedAt }`。多角色共享同一账本（资历归陪伴关系，见 [multi-character-ledger-shared](../decisions/implemented/feature/2026-08-09-multi-character-ledger-shared.md)）。
+`state.json`：`{ level, xp, stats{tasksDone, failures, sessions, activeMs, firstSeenAt}, titles[], memory[], updatedAt }`，存 `<dshHome>/data/whale-girl/`（home 由宿主 `dshHomePath()` 解析）。同目录可选 `state.floor.json`：加载时与 `state.json` 取 `xp` 较大者（**只抬不压**，恢复存档用；见 [state-persistence](../decisions/implemented/feature/2026-08-08-state-persistence.md)）。多角色共享同一账本（资历归陪伴关系，见 [multi-character-ledger-shared](../decisions/implemented/feature/2026-08-09-multi-character-ledger-shared.md)）。
 
 ## 成就系统（称号）
 

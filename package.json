@@ -31,6 +31,9 @@
   "dependencies": {
     "schemastery": "^3.18.0"
   },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-home-paths": "^0.2.0-rc.1"
+  },
   "scripts": {
     "gates": "node scripts/gates/run.mjs",
     "gates:ci": "node scripts/gates/run.mjs --group ci",
