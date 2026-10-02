@@ -1,7 +1,7 @@
 // 持久化纯逻辑单测（node:test）。归属：src/persistence.mjs 的行为改动跑本文件。
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { normalizeState, serializeState, pickHigherLedger } from '../lib/src/persistence.mjs'
+import { normalizeState, serializeState } from '../lib/src/persistence.mjs'
 
 test('normalizeState: 合法账本原样归一化', () => {
   const s = normalizeState({
@@ -65,25 +65,4 @@ test('normalizeState: updatedAt 缺失/非法回退 Date.now()', () => {
 test('serializeState: 往返一致', () => {
   const state = { level: 2, xp: 50, stats: { tasksDone: 5, failures: 0, sessions: 1, activeMs: 0, firstSeenAt: 1 }, titles: ['first-task'], memory: ['a'], updatedAt: 1234 }
   assert.deepEqual(JSON.parse(serializeState(state)), state)
-})
-
-test('pickHigherLedger: 无下限 → 原样用 state.json', () => {
-  const saved = normalizeState({ xp: 10, updatedAt: 0 })
-  assert.equal(pickHigherLedger(saved, null), saved)
-  assert.equal(pickHigherLedger(null, null), null)
-})
-
-test('pickHigherLedger: 下限更高 → 取下限（恢复存档场景）；state.json 缺失 → 取下限', () => {
-  const saved = normalizeState({ xp: 1017, updatedAt: 0 })
-  const floor = normalizeState({ xp: 14961, updatedAt: 0 })
-  assert.equal(pickHigherLedger(saved, floor).xp, 14961)
-  assert.equal(pickHigherLedger(null, floor).xp, 14961)
-})
-
-test('pickHigherLedger: 下限更低或相等 → 只抬不压（保留 state.json）', () => {
-  const floor = normalizeState({ xp: 14961, updatedAt: 0 })
-  const grown = normalizeState({ xp: 20000, updatedAt: 0 })
-  assert.equal(pickHigherLedger(grown, floor).xp, 20000)
-  const same = normalizeState({ xp: 14961, updatedAt: 100 })
-  assert.equal(pickHigherLedger(same, floor), same) // 相等时保留 state.json（保留更近的 updatedAt/stats）
 })
